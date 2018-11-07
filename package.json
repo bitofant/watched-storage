@@ -1,0 +1,31 @@
+{
+  "name": "watched-storage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npm run tsc -- --p tsconfig.backend.json && npm run tsc -- --p tsconfig.frontend.json",
+    "build:test": "npm run tsc -- --p tsconfig.backend-test.json",
+    "test": "npm run build:test && mocha dist/test/*.js",
+    "tsc": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitofant/watched-storage.git"
+  },
+  "author": "tesse@cudit.de",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bitofant/watched-storage/issues"
+  },
+  "homepage": "https://github.com/bitofant/watched-storage#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chai": "^4.1.0",
+    "@types/mocha": "^2.2.46",
+    "@types/socket.io": "^2.1.0",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "typescript": "^3.1.6"
+  }
+}

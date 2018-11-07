@@ -1,0 +1,34 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"module": "commonjs",
+		"declaration": true,
+		"rootDir": "src",
+		"outDir": "dist",
+		"lib": [
+			"es7"
+		],
+		"types": [
+			"node",
+			"socket.io"
+		],
+		"typeRoots": [
+			"node_modules/@types",
+			"node_modules/technicalindicators/declarations"
+		],
+		"sourceMap": true
+	},
+	"compileOnSave": true,
+	"files": [
+		"src/server/storage-server.ts"
+	],
+	"include": [
+		"src/shared/**/*.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"src/client",
+		"src/test",
+		"src/index.ts"
+	]
+}

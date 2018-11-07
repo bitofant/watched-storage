@@ -1,0 +1,36 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"module": "es6",
+		"declaration": true,
+		"moduleResolution": "node",
+		"lib": [
+			"dom",
+			"es7"
+		],
+		"outDir": "dist",
+		"types": [
+			"socket.io"
+		],
+		"typeRoots": [
+			"node_modules/@types",
+			"node_modules/technicalindicators/declarations"
+		],
+		"baseUrl": ".",
+		"paths": {
+			"@/*": [
+				"src/frontend/*"
+			]
+		},
+		"sourceMap": true
+	},
+	"include": [
+		"src/index.ts"
+	],
+	"exclude": [
+		"_depr",
+		"node_modules",
+		"src/backend",
+		"src/test"
+	]
+}

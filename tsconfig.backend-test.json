@@ -1,0 +1,21 @@
+{
+	"extends": "./tsconfig.backend.json",
+	"declaration": false,
+	"compilerOptions": {
+		"types": [
+			"node",
+			"socket.io",
+			"mocha"
+		]
+	},
+	"include": [
+		"src/test/**/*.spec.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"src/fontend",
+		"src/shared",
+		"src/backend/modules",
+		"src/index.ts"
+	]
+}
