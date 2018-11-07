@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "npm run tsc -- --p tsconfig.backend.json && npm run tsc -- --p tsconfig.frontend.json",
     "build:test": "npm run tsc -- --p tsconfig.backend-test.json",
