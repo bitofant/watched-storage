@@ -1,8 +1,8 @@
 import { watchObject, Change } from "./watched-object";
 
-function observedStorage<T> (callback : (changes : Change[]) => void) : Array<T> {
+function observedStorage<T> (callback : (changes : Change[]) => void, initialData? : Array<T>) : Array<T> {
 	var changes : Change[] = null;
-	return watchObject ([], null, change => {
+	return watchObject (initialData || [], null, change => {
 		if (changes === null) {
 			changes = [change];
 			process.nextTick (() => {
@@ -15,7 +15,7 @@ function observedStorage<T> (callback : (changes : Change[]) => void) : Array<T>
 	});
 }
 
-function applyChange (store : Array<any>, prop : Array<string>, newValue : any) {
+function applyChange<T> (store : Array<T>, prop : Array<string>, newValue : T) {
 	var o = store;
 	for (var i = 0; i < prop.length - 1; i++) {
 		o = o[prop[i]];

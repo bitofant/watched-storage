@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const watched_object_1 = require("./watched-object");
-function observedStorage(callback) {
+function observedStorage(callback, initialData) {
     var changes = null;
-    return watched_object_1.watchObject([], null, change => {
+    return watched_object_1.watchObject(initialData || [], null, change => {
         if (changes === null) {
             changes = [change];
             process.nextTick(() => {

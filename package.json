@@ -24,9 +24,10 @@
   "devDependencies": {
     "@types/chai": "^4.1.0",
     "@types/mocha": "^2.2.46",
-    "@types/socket.io": "^2.1.0",
+    "@types/mongodb": "^3.1.19",
+    "@types/socket.io": "^2.1.2",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "typescript": "^3.1.6"
+    "typescript": "^3.2.4"
   }
 }
