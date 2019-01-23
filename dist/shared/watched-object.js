@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 class Change {
     constructor(prop, oldValue, newValue) {
         this.prop = [prop];
@@ -7,7 +5,6 @@ class Change {
         this.newValue = newValue;
     }
 }
-exports.Change = Change;
 function isPrimitive(value, typ) {
     if (!typ)
         typ = typeof (value);
@@ -72,6 +69,6 @@ function watchObject(o, parent, listener) {
     });
     return proxied;
 }
-exports.watchObject = watchObject;
-exports.default = watchObject;
+export { watchObject, Change };
+export default watchObject;
 //# sourceMappingURL=watched-object.js.map

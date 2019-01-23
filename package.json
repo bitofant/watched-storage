@@ -5,7 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "npm run tsc -- --p tsconfig.backend.json && npm run tsc -- --p tsconfig.frontend.json",
+    "build": "npm run build:backend && npm run build:frontend && npm run build:index",
+    "build:backend": "npm run tsc -- --p tsconfig.backend.json",
+    "build:frontend": "npm run tsc -- --p tsconfig.frontend.json",
+    "build:index": "npm run tsc -- --p tsconfig.index.json",
     "build:test": "npm run tsc -- --p tsconfig.backend-test.json",
     "test": "npm run build:test && mocha dist/test/*.js",
     "tsc": "tsc"

@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var Events;
 (function (Events) {
     ;
@@ -23,6 +21,6 @@ var Events;
     }
     Events.convertChanges = convertChanges;
 })(Events || (Events = {}));
-exports.Events = Events;
-exports.default = Events;
+export { Events };
+export default Events;
 //# sourceMappingURL=io-events.js.map

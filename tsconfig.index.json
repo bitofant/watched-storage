@@ -25,14 +25,14 @@
 		"sourceMap": true
 	},
 	"files": [
-		"src/client/storage-client.ts"
+		"src/index.ts"
 	],
 	"exclude": [
 		"_depr",
 		"node_modules",
 		"src/backend",
+		"src/client",
 		"src/shared",
-		"src/test",
-		"src/index.ts"
+		"src/test"
 	]
 }
