@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "npm run build:backend && npm run build:frontend && npm run build:index",
+    "build": "npm run build:index",
     "build:backend": "npm run tsc -- --p tsconfig.backend.json",
     "build:frontend": "npm run tsc -- --p tsconfig.frontend.json",
     "build:index": "npm run tsc -- --p tsconfig.index.json",

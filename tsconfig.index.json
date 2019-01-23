@@ -1,14 +1,14 @@
 {
 	"compilerOptions": {
 		"target": "es6",
-		"module": "es6",
+		"module": "system",
 		"declaration": true,
 		"moduleResolution": "node",
 		"lib": [
 			"dom",
 			"es7"
 		],
-		"outDir": "dist",
+		"outFile": "dist/index.js",
 		"types": [
 			"socket.io"
 		],
@@ -30,9 +30,6 @@
 	"exclude": [
 		"_depr",
 		"node_modules",
-		"src/backend",
-		"src/client",
-		"src/shared",
-		"src/test"
+		"src/backend"
 	]
 }
