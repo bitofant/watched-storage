@@ -7,10 +7,11 @@ declare namespace Events {
     }
     interface Initialize extends Array<any> {
     }
-    function eventNames(eventPrefix: string): {
+    interface EventNames {
         initialize: string;
         changes: string;
-    };
+    }
+    function eventNames(eventPrefix: string): EventNames;
     function convertChanges(changes: Array<{
         prop: string[];
         oldValue: any;

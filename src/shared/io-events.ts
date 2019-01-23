@@ -9,7 +9,12 @@ namespace Events {
 
 	export interface Initialize extends Array<any> {}
 
-	export function eventNames (eventPrefix : string) {
+	export interface EventNames {
+		initialize : string,
+		changes : string
+	}
+
+	export function eventNames (eventPrefix : string) : EventNames {
 		const prefix = eventPrefix + ':';
 		return {
 			initialize: prefix + 'init',

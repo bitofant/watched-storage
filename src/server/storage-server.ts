@@ -2,12 +2,12 @@ import { observedStorage, applyChange } from "../shared/observed-storage";
 import { Events } from "../shared/io-events";
 import { Change } from "../shared/watched-object";
 import { SocketCollection } from "./socket-collection";
-import { Collection } from "mongodb";
+import { Collection, ObjectID } from "mongodb";
 
 
 
 class StorageServer<T> {
-	private readonly ev;
+	private readonly ev : Events.EventNames;
 	public readonly dataList : Array<T>;
 	private readonly checkIfAccessRestricted : Array<(socket : SocketIO.Socket, change : Events.Change) => boolean> = [];
 	private readonly listeners : Array<(changes: Change[]) => void> = [];
@@ -28,18 +28,24 @@ class StorageServer<T> {
 		io.on('connection', socket => {
 			this.initializeSocket (socket);
 		});
+		this.listeners.push (changes => {
+			io.emit (this.ev.changes, Events.convertChanges (changes));
+		});
 		return this;
 	}
 
 	public withAuthorizedSocketIO () : StorageServer<T> {
-		this.authorizedSockets = new SocketCollection ();
+		if (this.authorizedSockets === null) {
+			this.authorizedSockets = new SocketCollection ();
+			this.listeners.push (changes => {
+				this.authorizedSockets.emit (this.ev.changes, Events.convertChanges (changes));
+			});
+		}
 		return this;
 	}
 
 	public authorizeSocket (socket : SocketIO.Socket) : void {
-		if (this.authorizedSockets === null) {
-			this.withAuthorizedSocketIO ();
-		}
+		this.withAuthorizedSocketIO ();
 		this.authorizedSockets.add (socket);
 		this.initializeSocket (socket);
 	}
@@ -57,7 +63,7 @@ class StorageServer<T> {
 	}
 
 	public restrictWriteAccess (listener : (socket: SocketIO.Socket, change: Events.Change) => boolean) : StorageServer<T> {
-		this.checkIfAccessRestricted.push (listener);
+		this.checkIfAccessRestricted.push(listener);
 		return this;
 	}
 
@@ -70,6 +76,31 @@ class StorageServer<T> {
 
 	public withMongo (collection : Collection<T>, classLoader? : (dbItem : any) => T) : Promise<StorageServer<T>> {
 		const self = this;
+
+		this.listeners.push(changes => {
+			changes.forEach(change => {
+				console.log('changed: ' + change.prop.join ('.'));
+				var entity = self.dataList[change.prop[0]];
+				var objectId = entity['_id'];
+				if (objectId) {
+					var id = ObjectID.createFromHexString (objectId);
+					var copyOfEntity = Object.assign ({ _id: objectId }, entity);
+					delete copyOfEntity._id;
+					collection.updateOne ({ _id: id }, copyOfEntity, (err, result) => {
+						if (err) throw err;
+						console.log('mongodb::updated::' + result.modifiedCount);
+					});
+				} else {
+					collection.insertOne (entity, (err, result) => {
+						if (err) throw err;
+						console.log('mongodb::inserted::' + result.insertedCount + ' (_id => ' + result.insertedId.toHexString () + ')');
+						Object.assign (entity, { _id: result.insertedId.toHexString() });
+					});
+				}
+			});
+		});
+
+		// load data from DB:
 		return new Promise ((resolve, reject) => {
 			collection.find().toArray((err, entities) => {
 				if (err) {
