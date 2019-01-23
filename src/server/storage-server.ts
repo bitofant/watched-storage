@@ -68,7 +68,7 @@ class StorageServer<T> {
 		return true;
 	}
 
-	public withMongo (collection : Collection, classLoader? : (dbItem : any) => T) {
+	public withMongo (collection : Collection<T>, classLoader? : (dbItem : any) => T) : Promise<StorageServer<T>> {
 		const self = this;
 		return new Promise ((resolve, reject) => {
 			collection.find().toArray((err, entities) => {

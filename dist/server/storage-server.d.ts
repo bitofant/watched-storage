@@ -15,7 +15,7 @@ declare class StorageServer<T> {
     private initializeSocket;
     restrictWriteAccess(listener: (socket: SocketIO.Socket, change: Events.Change) => boolean): StorageServer<T>;
     private accessGranted;
-    withMongo(collection: Collection, classLoader?: (dbItem: any) => T): Promise<{}>;
+    withMongo(collection: Collection<T>, classLoader?: (dbItem: any) => T): Promise<StorageServer<T>>;
 }
 export { StorageServer };
 export default StorageServer;
