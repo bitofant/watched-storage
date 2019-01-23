@@ -1,14 +1,14 @@
 {
 	"compilerOptions": {
 		"target": "es6",
-		"module": "system",
+		"module": "es6",
 		"declaration": true,
 		"moduleResolution": "node",
 		"lib": [
 			"dom",
 			"es7"
 		],
-		"outFile": "dist/index.js",
+		"outDir": "dist/",
 		"types": [
 			"socket.io"
 		],
