@@ -15,7 +15,7 @@ class StorageServer<T> {
 
 	constructor (eventPrefix : string, data? : Array<T>) {
 		this.ev = Events.eventNames(eventPrefix);
-		this.dataList = observedStorage (this.onChange, data ? data : []);
+		this.dataList = observedStorage (changes => this.onChange(changes), data ? data : []);
 	}
 
 	private onChange (changes : Change[]) {

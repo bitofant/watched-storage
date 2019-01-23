@@ -10,7 +10,7 @@ class StorageServer {
         this.listeners = [];
         this.authorizedSockets = null;
         this.ev = io_events_1.Events.eventNames(eventPrefix);
-        this.dataList = observed_storage_1.observedStorage(this.onChange, data ? data : []);
+        this.dataList = observed_storage_1.observedStorage(changes => this.onChange(changes), data ? data : []);
     }
     onChange(changes) {
         this.listeners.forEach(listener => {
