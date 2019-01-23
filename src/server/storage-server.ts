@@ -101,7 +101,7 @@ class StorageServer<T> {
 		});
 
 		// load data from DB:
-		return new Promise ((resolve, reject) => {
+		return new Promise<StorageServer<T>> ((resolve, reject) => {
 			collection.find().toArray((err, entities) => {
 				if (err) {
 					reject (err);
