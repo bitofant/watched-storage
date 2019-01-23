@@ -1,7 +1,9 @@
-import { watchObject } from "./watched-object";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const watched_object_1 = require("./watched-object");
 function observedStorage(callback, initialData) {
     var changes = null;
-    return watchObject(initialData || [], null, change => {
+    return watched_object_1.watchObject(initialData || [], null, change => {
         if (changes === null) {
             changes = [change];
             process.nextTick(() => {
@@ -14,6 +16,7 @@ function observedStorage(callback, initialData) {
         }
     });
 }
+exports.observedStorage = observedStorage;
 function applyChange(store, prop, newValue) {
     var o = store;
     for (var i = 0; i < prop.length - 1; i++) {
@@ -21,6 +24,6 @@ function applyChange(store, prop, newValue) {
     }
     o[prop[prop.length - 1]] = newValue;
 }
-export { observedStorage, applyChange };
-export default observedStorage;
+exports.applyChange = applyChange;
+exports.default = observedStorage;
 //# sourceMappingURL=observed-storage.js.map

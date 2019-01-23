@@ -1,17 +1,19 @@
-import { observedStorage, applyChange } from "../shared/observed-storage";
-import { Events } from '../shared/io-events';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const observed_storage_1 = require("../shared/observed-storage");
+const io_events_1 = require("../shared/io-events");
 function synchronizedStorageClient(sock, eventPrefix) {
-    const ev = Events.eventNames(eventPrefix);
+    const ev = io_events_1.Events.eventNames(eventPrefix);
     var dontSynchronize = false;
-    const dataList = observedStorage(changes => {
+    const dataList = observed_storage_1.observedStorage(changes => {
         if (dontSynchronize)
             return;
-        sock.emit(ev.changes, Events.convertChanges(changes));
+        sock.emit(ev.changes, io_events_1.Events.convertChanges(changes));
     });
     sock.on(ev.changes, (changes) => {
         dontSynchronize = true;
         changes.forEach(change => {
-            applyChange(dataList, change.prop, change.value);
+            observed_storage_1.applyChange(dataList, change.prop, change.value);
         });
         dontSynchronize = false;
     });
@@ -23,6 +25,6 @@ function synchronizedStorageClient(sock, eventPrefix) {
     sock.emit(ev.initialize);
     return dataList;
 }
-export default synchronizedStorageClient;
-export { synchronizedStorageClient as storageClient };
+exports.storageClient = synchronizedStorageClient;
+exports.default = synchronizedStorageClient;
 //# sourceMappingURL=storage-client.js.map

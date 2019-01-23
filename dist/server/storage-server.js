@@ -1,14 +1,16 @@
-import { observedStorage, applyChange } from "../shared/observed-storage";
-import { Events } from "../shared/io-events";
-import { SocketCollection } from "./socket-collection";
-import { ObjectID } from "mongodb";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const observed_storage_1 = require("../shared/observed-storage");
+const io_events_1 = require("../shared/io-events");
+const socket_collection_1 = require("./socket-collection");
+const mongodb_1 = require("mongodb");
 class StorageServer {
     constructor(eventPrefix, data) {
         this.checkIfAccessRestricted = [];
         this.listeners = [];
         this.authorizedSockets = null;
-        this.ev = Events.eventNames(eventPrefix);
-        this.dataList = observedStorage(this.onChange, data ? data : []);
+        this.ev = io_events_1.Events.eventNames(eventPrefix);
+        this.dataList = observed_storage_1.observedStorage(this.onChange, data ? data : []);
     }
     onChange(changes) {
         this.listeners.forEach(listener => {
@@ -20,15 +22,15 @@ class StorageServer {
             this.initializeSocket(socket);
         });
         this.listeners.push(changes => {
-            io.emit(this.ev.changes, Events.convertChanges(changes));
+            io.emit(this.ev.changes, io_events_1.Events.convertChanges(changes));
         });
         return this;
     }
     withAuthorizedSocketIO() {
         if (this.authorizedSockets === null) {
-            this.authorizedSockets = new SocketCollection();
+            this.authorizedSockets = new socket_collection_1.SocketCollection();
             this.listeners.push(changes => {
-                this.authorizedSockets.emit(this.ev.changes, Events.convertChanges(changes));
+                this.authorizedSockets.emit(this.ev.changes, io_events_1.Events.convertChanges(changes));
             });
         }
         return this;
@@ -43,7 +45,7 @@ class StorageServer {
         socket.on(this.ev.changes, (changes) => {
             changes.forEach(change => {
                 if (this.accessGranted(socket, change)) {
-                    applyChange(this.dataList, change.prop, change.value);
+                    observed_storage_1.applyChange(this.dataList, change.prop, change.value);
                 }
             });
         });
@@ -67,7 +69,7 @@ class StorageServer {
                 var entity = self.dataList[change.prop[0]];
                 var objectId = entity['_id'];
                 if (objectId) {
-                    var id = ObjectID.createFromHexString(objectId);
+                    var id = mongodb_1.ObjectID.createFromHexString(objectId);
                     var copyOfEntity = Object.assign({ _id: objectId }, entity);
                     delete copyOfEntity._id;
                     collection.updateOne({ _id: id }, copyOfEntity, (err, result) => {
@@ -106,6 +108,6 @@ class StorageServer {
         });
     }
 }
-export { StorageServer };
-export default StorageServer;
+exports.StorageServer = StorageServer;
+exports.default = StorageServer;
 //# sourceMappingURL=storage-server.js.map

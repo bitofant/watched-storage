@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function log(...args) {
     console.log(...args);
 }
@@ -96,6 +98,6 @@ class SocketCollection {
     }
     ;
 }
-export { SocketCollection };
-export default SocketCollection;
+exports.SocketCollection = SocketCollection;
+exports.default = SocketCollection;
 //# sourceMappingURL=socket-collection.js.map
