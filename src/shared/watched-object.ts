@@ -16,11 +16,12 @@ interface ParentObject {
 
 function isPrimitive (value : any, typ? : string) : boolean {
 	if (!typ) typ = typeof (value);
-	return typ === 'undefined' || typ === 'string' || typ === 'number' || value === null;
+	return typ === 'undefined' || typ === 'string' || typ === 'number' || typ === 'boolean' || value === null;
 }
 
 
 function watchObject<T extends Object> (o : T, parent : any, listener : (change : Change) => void) : T {
+	if (typeof (o) === 'function') return o;
 	if (o['__watched']) {
 		// watcher functions already attached? just add me as a listener...
 		o['__watched'].add ({ parent, listener });
@@ -30,6 +31,10 @@ function watchObject<T extends Object> (o : T, parent : any, listener : (change 
 	// no watcher functions attached yet; initialize object!
 	var listeners : ParentObject[] = [{ parent, listener }];
 	if (!isPrimitive (o)) {
+		// console.log ('- watching ' + (typeof (o)) + ':' + JSON.stringify(o));
+		// if (!Object.isExtensible(o)) console.log ('  [inextensible]');
+		// if (Object.isFrozen(o)) console.log ('  [frozen]');
+		// if (Object.isSealed(o)) console.log ('  [sealed]');
 		for (var k in o) {
 			if (!isPrimitive (o[k])) {
 				o[k] = watchObject (o[k], o, change => {

@@ -13,6 +13,8 @@ class StorageServer<T> {
 	private readonly listeners : Array<(changes: Change[]) => void> = [];
 	private authorizedSockets : SocketCollection = null;
 
+	private initializing : boolean = false;
+
 	constructor (eventPrefix : string, data? : Array<T>) {
 		this.ev = Events.eventNames(eventPrefix);
 		this.dataList = observedStorage (changes => this.onChange(changes), data ? data : []);
@@ -78,15 +80,15 @@ class StorageServer<T> {
 		const self = this;
 
 		this.listeners.push(changes => {
+			if (self.initializing) return;
 			changes.forEach(change => {
-				console.log('changed: ' + change.prop.join ('.'));
 				var entity = self.dataList[change.prop[0]];
 				var objectId = entity['_id'];
 				if (objectId) {
 					var id = ObjectID.createFromHexString (objectId);
 					var copyOfEntity = Object.assign ({ _id: objectId }, entity);
 					delete copyOfEntity._id;
-					collection.updateOne ({ _id: id }, copyOfEntity, (err, result) => {
+					collection.updateOne ({ _id: id }, { $set: copyOfEntity }, (err, result) => {
 						if (err) throw err;
 						console.log('mongodb::updated::' + result.modifiedCount);
 					});
@@ -107,14 +109,19 @@ class StorageServer<T> {
 					reject (err);
 					return;
 				}
-				entities.forEach(item => {
+				self.initializing = true;
+				entities.forEach(mongoItem => {
+					var item = Object.assign({}, mongoItem, { _id: mongoItem['_id'].toHexString() });
 					if (classLoader) {
 						this.dataList.push (classLoader (item));
 					} else {
 						this.dataList.push (item);
 					}
 				});
-				resolve (self);
+				process.nextTick (() => {
+					self.initializing = false;
+					resolve (self);
+				});
 			});
 		});
 	}

@@ -9,6 +9,7 @@ class StorageServer {
         this.checkIfAccessRestricted = [];
         this.listeners = [];
         this.authorizedSockets = null;
+        this.initializing = false;
         this.ev = io_events_1.Events.eventNames(eventPrefix);
         this.dataList = observed_storage_1.observedStorage(changes => this.onChange(changes), data ? data : []);
     }
@@ -64,8 +65,9 @@ class StorageServer {
     withMongo(collection, classLoader) {
         const self = this;
         this.listeners.push(changes => {
+            if (self.initializing)
+                return;
             changes.forEach(change => {
-                console.log('changed: ' + change.prop.join('.'));
                 var entity = self.dataList[change.prop[0]];
                 var objectId = entity['_id'];
                 if (objectId) {
@@ -95,7 +97,9 @@ class StorageServer {
                     reject(err);
                     return;
                 }
-                entities.forEach(item => {
+                self.initializing = true;
+                entities.forEach(mongoItem => {
+                    var item = Object.assign({}, mongoItem, { _id: mongoItem['_id'].toHexString() });
                     if (classLoader) {
                         this.dataList.push(classLoader(item));
                     }
@@ -103,7 +107,10 @@ class StorageServer {
                         this.dataList.push(item);
                     }
                 });
-                resolve(self);
+                process.nextTick(() => {
+                    self.initializing = false;
+                    resolve(self);
+                });
             });
         });
     }

@@ -7,6 +7,7 @@ declare class StorageServer<T> {
     private readonly checkIfAccessRestricted;
     private readonly listeners;
     private authorizedSockets;
+    private initializing;
     constructor(eventPrefix: string, data?: Array<T>);
     private onChange;
     withSocketIO(io: SocketIO.Server): StorageServer<T>;
